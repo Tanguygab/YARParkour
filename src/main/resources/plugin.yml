@@ -1,0 +1,6 @@
+name: YARParkour
+version: '1.0.0'
+main: io.github.tanguygab.yarparkour.YARParkour
+api-version: '1.21'
+authors: [ Tanguygab ]
+description: Yet Another Random Parkour plugin
