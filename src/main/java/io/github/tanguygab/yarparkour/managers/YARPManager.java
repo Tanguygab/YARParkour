@@ -1,4 +1,4 @@
-package io.github.tanguygab.yarparkour.entities;
+package io.github.tanguygab.yarparkour.managers;
 
 import io.github.tanguygab.yarparkour.YARParkour;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -7,14 +7,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class YARManager {
+public abstract class YARPManager {
 
     protected final YARParkour plugin;
 
     protected final FileConfiguration data;
     private final File dataFile;
 
-    public YARManager(YARParkour plugin, String fileName) {
+    public YARPManager(YARParkour plugin, String fileName) {
         this.plugin = plugin;
         dataFile = new File(plugin.getDataFolder(), fileName);
         data = YamlConfiguration.loadConfiguration(dataFile);

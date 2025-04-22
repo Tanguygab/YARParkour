@@ -1,11 +1,16 @@
-package io.github.tanguygab.yarparkour.subcommands;
+package io.github.tanguygab.yarparkour.subcommands.player;
 
 import io.github.tanguygab.yarparkour.YARParkour;
+import io.github.tanguygab.yarparkour.subcommands.SubCommand;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HelpCommand extends SubCommand {
+
+    private final List<String> msg = plugin.getMessages("commands.help.message");
+    private final List<String> commandMsg = plugin.getMessages("commands.help.command");
 
     public HelpCommand(YARParkour plugin) {
         super(plugin, "help");
@@ -13,20 +18,21 @@ public class HelpCommand extends SubCommand {
 
     @Override
     public void onCommand(CommandSender sender, String command, String[] args) {
-        List<String> msg = plugin.getMessages("commands.help.message");
-        List<String> commandMsg = plugin.getMessages("commands.help.command");
-
+        List<String> subcommands = new ArrayList<>();
         for (String subcommand : plugin.getCommand().getSubcommands()) {
-            String usage = plugin.getMessage("commands." + subcommand + ".usage");
-            String description = plugin.getMessage("commands." + subcommand + ".description");
+            String usage = getMessage("commands." + subcommand + ".usage");
+            String description = getMessage("commands." + subcommand + ".description");
             for (String cmdMsg : commandMsg) {
-                msg.add(cmdMsg
+                subcommands.add(cmdMsg
                         .replace("{usage}", usage)
                         .replace("{description}", description)
                 );
             }
         }
-        sendMessage(sender, String.join("\n", msg).replace("{command}", command));
+        sendMessage(sender, String.join("\n", msg)
+                .replace("{commands}", String.join("\n", subcommands))
+                .replace("{command}", command)
+        );
     }
 
     @Override

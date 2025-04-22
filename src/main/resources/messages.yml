@@ -1,0 +1,104 @@
+commands:
+  invalid:
+    player: "&cPlayer \"&4{player}&c\" isn't online!"
+    parkour: "&cParkour \"&4{parkour}&c\" doesn't exist!"
+    permission: "&cYou don't have the permission to run this command!"
+    not-in-a-parkour: "&cYou're not in a parkour!"
+    console: "&cYou must be a player to run this command!"
+    no-name: "&cYou didn't provide any name!"
+    name: "&cYou can't use &4. &cin a parkour's name!"
+
+  help:
+    description: "See this plugin's commands"
+    usage: "/{command} help"
+    message:
+      - "&8--------------------"
+      - "&a[YARParkour] {version}"
+      - "{commands}"
+      - "&8--------------------"
+    command:
+      - "&7{description}"
+      - "&8 - &7{usage}"
+  create:
+    description: "Create a new parkour"
+    usage: "/{command} create <name>"
+    created: "&aParkour {parkour} created!"
+    already-exists: "&cA parkour with that name already exists"
+  delete:
+    description: "Delete a parkour"
+    usage: "/{command} delete <name>"
+    deleted: "&aParkour {parkour} deleted!"
+  list:
+    description: "List all parkours"
+    usage: "/{command} list [page]"
+    message:
+      - "&8--------------------"
+      - "&7Parkours {page}/{maxpage} &8(&a{enabled}&8/&7{total}&8)&7:"
+      - "{parkours}"
+      - "&8--------------------"
+    parkour: "&f - {enabled}{parkour}"
+  info:
+    description: "Check a parkour's info"
+    usage: "/{command} info <parkour>"
+    status:
+      enabled: "&aEnabled"
+      disabled: "&cDisabled"
+    message:
+      - "&8--------------------"
+      - "&7Name: &f{parkour}"
+      - "&7Status: {status}"
+      - "&7Start: {start-location}"
+      - "&7End: {end-location}"
+      - "&7Checkpoints:"
+      - "{checkpoints}"
+      - "&8--------------------"
+    unset: "&cUnset"
+    location: "&e{world}&7, &e{x}&7, &e{y}&7, &e{z}"
+    checkpoint: "&7 - &f#{checkpoint} &7({location}&7)"
+  edit:
+    description: "Edit an existing parkour"
+    usage: "/{command} edit <name> toggle|checkpoint"
+    toggled:
+      enabled: "&aParkour enabled!"
+      disabled: "&cParkour disabled!"
+    checkpoint:
+      usage:
+        - "/{command} edit {parkour} checkpoint add"
+        - "/{command} edit {parkour} checkpoint insert <#>"
+        - "/{command} edit {parkour} checkpoint set <#>|start|end"
+        - "/{command} edit {parkour} checkpoint remove <#>|start|end"
+      added: "&aCheckpoint added!"
+      set: "&aCheckpoint set!"
+      removed: "&cCheckpoint removed!"
+      invalid: "&cInvalid checkpoint position!"
+  reload:
+    description: "Reload this plugin's configuration"
+    usage: "/{command} reload"
+    reloaded: "&aPlugin reloaded successfully"
+  start:
+    description: "Start a parkour"
+    usage: "/{command} start <parkour> [player]"
+    started-for-player: "&aParkour started for {player}"
+  stop:
+    description: "Stop a parkour"
+    usage: "/{command} stop <parkour> [player]"
+    no-parkour: "&cNo parkour started!"
+    stopped-for-player: "&aParkour stopped for {player}"
+  checkpoint:
+    description: "Go back to the last checkpoint"
+    usage: "/{command} checkpoint [player]"
+    teleported: "&aTeleported back to the last checkpoint."
+
+parkour:
+  no-parkour: "&cYou're not in any parkour!"
+  disabled: "&cThis parkour is disabled!"
+  not-set-up: "&cThis parkour isn't fully set up!"
+  already-in-parkour: "&cYou're already in a parkour! Finish it before starting a new one!"
+  not-started: "&cYou haven't started this parkour yet!"
+  started: "&aParkour started, get to the finish line!"
+  restarted: "&aParkour restarted, get to the finish line!"
+  stopped: "&aParkour stopped"
+  finished: "&aYou reached the end! Parkour finished in {time}"
+  checkpoint:
+    reached: "&aCheckpoint #{checkpoint} reached in {time}!"
+    missed: "&cYou missed a checkpoint! Parkour cancelled."

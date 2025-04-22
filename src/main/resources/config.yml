@@ -1,0 +1,16 @@
+distance: 1.5
+
+checkpoints:
+  start:
+    block: DIAMOND_BLOCK
+    text:
+      - "&aParkour {parkour} &2Start"
+      #- "&aBest time: &2{best}"
+  checkpoint:
+    block: GOLD_BLOCK
+    text:
+      - "&aCheckpoint &6#{checkpoint}"
+  end:
+    block: EMERALD_BLOCK
+    text:
+      - "&aParkour {parkour} &cEnd!"

@@ -1,49 +1,48 @@
-package io.github.tanguygab.yarparkour;
+package io.github.tanguygab.yarparkour.entities;
+
+import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
-import java.util.UUID;
 
 public class YARPPlayer {
 
-    private final String name;
-    private final UUID uuid;
+    private final Player player;
     private final Map<YARPParkour, Double> bestTimes;
     private YARPParkour currentParkour;
     private int currentParkourCheckpoint;
     private LocalDateTime currentParkourStart;
 
-    public YARPPlayer(String name, UUID uuid, Map<YARPParkour, Double> bestTimes) {
-        this.name = name;
-        this.uuid = uuid;
+    public YARPPlayer(Player player, Map<YARPParkour, Double> bestTimes) {
+        this.player = player;
         this.bestTimes = bestTimes;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public UUID getUUID() {
-        return uuid;
+    public Player getPlayer() {
+        return player;
     }
 
     public YARPParkour getCurrentParkour() {
         return currentParkour;
     }
 
-    public void setCurrentParkour(YARPParkour currentParkour) {
-        this.currentParkour = currentParkour;
-        currentParkourCheckpoint = 0;
-        currentParkourStart = LocalDateTime.now();
+    public void setCurrentParkour(YARPParkour parkour) {
+        currentParkour = parkour;
+        currentParkourCheckpoint = -1;
+        currentParkourStart = null;
+        if (parkour != null) {
+            currentParkourStart = LocalDateTime.now();
+            player.teleport(parkour.getStart());
+        }
     }
 
     public int getCurrentParkourCheckpoint() {
         return currentParkourCheckpoint;
     }
 
-    public void nextCheckpoint() {
-        currentParkourCheckpoint++;
+    public int nextCheckpoint() {
+        return ++currentParkourCheckpoint;
     }
 
     public LocalDateTime getCurrentParkourStart() {
@@ -65,6 +64,10 @@ public class YARPPlayer {
         if (minutes > 0) duration += (duration.isEmpty() ? "" : " ") + minutes + "m";
         if (seconds > 0) duration += (duration.isEmpty() ? "" : " ") + seconds + "s";
         return duration;
+    }
+
+    public Map<YARPParkour, Double> getBestTimes() {
+        return bestTimes;
     }
 
     public double getBestTime(YARPParkour parkour) {

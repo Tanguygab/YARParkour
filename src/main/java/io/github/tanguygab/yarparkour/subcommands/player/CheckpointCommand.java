@@ -1,19 +1,38 @@
-package io.github.tanguygab.yarparkour.subcommands;
+package io.github.tanguygab.yarparkour.subcommands.player;
 
 import io.github.tanguygab.yarparkour.YARParkour;
+import io.github.tanguygab.yarparkour.entities.YARPPlayer;
+import io.github.tanguygab.yarparkour.subcommands.SubCommand;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public class StopCommand extends SubCommand {
+public class CheckpointCommand extends SubCommand {
 
-    public StopCommand(YARParkour plugin) {
-        super(plugin, "stop");
+    public CheckpointCommand(YARParkour plugin) {
+        super(plugin, "checkpoint");
     }
 
     @Override
     public void onCommand(CommandSender sender, String command, String[] args) {
+        YARPPlayer player = getPlayer(sender, args, 0);
+        if (player == null) return;
 
+        if (player.getCurrentParkour() == null) {
+            sendMessage(player.getPlayer(), getMessage("parkour.no-parkour"));
+            return;
+        }
+
+        int checkpoint = player.getCurrentParkourCheckpoint();
+        Location location = checkpoint < 0
+                ? player.getCurrentParkour().getStart()
+                : player.getCurrentParkour().getCheckpoints().get(checkpoint);
+
+        player.getPlayer().teleport(location);
+
+        sendMessage(player.getPlayer(), getMessage("commands.checkpoint.teleported"));
+        if (sender != player.getPlayer()) sendMessage(sender, getMessage("commands.checkpoint.teleported"));
     }
 
     @Override
