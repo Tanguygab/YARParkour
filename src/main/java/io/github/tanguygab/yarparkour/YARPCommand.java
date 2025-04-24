@@ -10,6 +10,7 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,19 +19,20 @@ public class YARPCommand implements CommandExecutor, TabCompleter {
     private final Map<String, SubCommand> subcommands;
 
     public YARPCommand(YARParkour plugin) {
-        subcommands = Map.of(
-                "create", new CreateCommand(plugin),
-                "delete", new DeleteCommand(plugin),
-                "edit", new EditCommand(plugin),
-                "info", new InfoCommand(plugin),
-                "list", new ListCommand(plugin),
-                "reload", new ReloadCommand(plugin),
+        subcommands = new HashMap<>() {{
+                put("create", new CreateCommand(plugin));
+                put("delete", new DeleteCommand(plugin));
+                put("edit", new EditCommand(plugin));
+                put("info", new InfoCommand(plugin));
+                put("list", new ListCommand(plugin));
+                put("reload", new ReloadCommand(plugin));
 
-                "checkpoint", new CheckpointCommand(plugin),
-                "help", new HelpCommand(plugin),
-                "start", new StartCommand(plugin),
-                "stop", new StopCommand(plugin)
-        );
+                put("checkpoint", new CheckpointCommand(plugin));
+                put("help", new HelpCommand(plugin));
+                put("reset", new ResetCommand(plugin));
+                put("start", new StartCommand(plugin));
+                put("stop", new StopCommand(plugin));
+            }};
     }
 
     @Override

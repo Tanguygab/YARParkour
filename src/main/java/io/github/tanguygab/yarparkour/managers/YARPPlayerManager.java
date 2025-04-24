@@ -26,7 +26,7 @@ public class YARPPlayerManager extends YARPManager {
     public void loadPlayer(Player player) {
         ConfigurationSection config = data.getConfigurationSection(player.getUniqueId().toString());
 
-        Map<YARPParkour, Double> bestTimes = new HashMap<>();
+        Map<YARPParkour, Long> bestTimes = new HashMap<>();
         if (config == null) {
             players.put(player.getUniqueId(), new YARPPlayer(player, bestTimes));
             return;
@@ -40,7 +40,7 @@ public class YARPPlayerManager extends YARPManager {
                     plugin.getLogger().warning("Parkour " + parkourName + " not found, skipping best time for " + player.getName());
                     return;
                 }
-                bestTimes.put(parkour, (double) time);
+                bestTimes.put(parkour, (long) time);
             });
         }
 
@@ -55,7 +55,7 @@ public class YARPPlayerManager extends YARPManager {
     }
 
     public void unloadPlayer(UUID uuid, boolean remove) {
-        Map<String, Double> bestTimes = new HashMap<>();
+        Map<String, Long> bestTimes = new HashMap<>();
         players.get(uuid).getBestTimes().forEach((parkour, time) -> bestTimes.put(parkour.getName(), time));
         data.set(uuid + ".best-times", bestTimes);
         if (remove) players.remove(uuid);

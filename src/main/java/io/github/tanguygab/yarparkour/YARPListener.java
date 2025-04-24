@@ -1,5 +1,6 @@
 package io.github.tanguygab.yarparkour;
 
+import io.github.tanguygab.yarparkour.config.YARPItem;
 import io.github.tanguygab.yarparkour.entities.YARPParkour;
 import io.github.tanguygab.yarparkour.entities.YARPPlayer;
 import org.bukkit.Chunk;
@@ -10,14 +11,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.inventory.ItemStack;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class YARPListener implements Listener {
 
@@ -35,6 +37,33 @@ public class YARPListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         plugin.getPlayerManager().unloadPlayer(e.getPlayer().getUniqueId(), true);
+        locations.remove(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onInvClick(InventoryClickEvent e) {
+        if (e.getWhoClicked() instanceof Player player) {
+            onItem(player, e.getCursor(), e);
+            onItem(player, e.getCurrentItem(), e);
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e) {
+        onItem(e.getPlayer(), e.getItem(), e);
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent e) {
+        onItem(e.getPlayer(), e.getItemDrop().getItemStack(), e);
+    }
+
+    public void onItem(Player player, ItemStack itemStack, Cancellable e) {
+        YARPItem item = plugin.getConfiguration().getItem(itemStack);
+        if (item == null) return;
+
+        e.setCancelled(true);
+        item.runCommands(player);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -57,16 +86,25 @@ public class YARPListener implements Listener {
     }
 
     public final List<Player> moved = new ArrayList<>();
+    private final Map<Player, Location> locations = new HashMap<>();
 
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent e) {
         Location location = e.getTo();
         if (location == null) return;
 
+        Player player = e.getPlayer();
+        Location old = locations.get(e.getPlayer());
+        if (old != null
+                && old.getBlockX() == location.getBlockX()
+                && old.getBlockY() == location.getBlockY()
+                && old.getBlockZ() == location.getBlockZ()
+        ) return;
+        locations.put(player, location);
+
         YARPParkour parkour = plugin.getParkourManager().getParkourFromCheckpoint(location);
         if (parkour == null) return;
 
-        Player player = e.getPlayer();
         if (moved.contains(player)) return;
 
         moved.add(player);
@@ -107,12 +145,15 @@ public class YARPListener implements Listener {
         if (plugin.getParkourManager().locationMatch(location, parkour.getEnd())) {
             if (pPlayer.nextCheckpoint() < parkour.getCheckpoints().size()) {
                 plugin.sendMessage(player, plugin.getMessage("parkour.checkpoint.missed"));
+                pPlayer.setCurrentParkour(null);
                 return;
             }
             plugin.sendMessage(player, plugin
                     .getMessage("parkour.finished")
                     .replace("{time}", pPlayer.getCurrentParkourDuration())
             );
+            pPlayer.setBestTime(parkour);
+            pPlayer.setCurrentParkour(null);
             return;
         }
 

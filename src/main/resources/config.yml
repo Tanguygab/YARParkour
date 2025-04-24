@@ -14,3 +14,23 @@ checkpoints:
     block: EMERALD_BLOCK
     text:
       - "&aParkour {parkour} &cEnd!"
+
+items:
+  restart:
+    name: "&cReset"
+    material: OAK_DOOR
+    slot: 4
+    commands:
+      - parkour reset
+  checkpoint:
+    name: "&aTeleport to the Last Checkpoint"
+    material: HEAVY_WEIGHTED_PRESSURE_PLATE
+    slot: 3
+    commands:
+      - parkour checkpoint
+  stop:
+    name: "&cCancel"
+    material: RED_BED
+    slot: 5
+    commands:
+      - parkour stop

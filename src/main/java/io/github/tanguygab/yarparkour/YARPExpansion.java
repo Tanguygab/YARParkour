@@ -65,11 +65,11 @@ public class YARPExpansion extends PlaceholderExpansion {
             case "current_start" -> player.getCurrentParkourStart() == null
                     ? ""
                     : PlaceholderAPIPlugin.getDateFormat().format(player.getCurrentParkourStart());
-            case "current_seconds" -> player.getCurrentParkourStart() == null
-                    ? "0"
-                    : String.valueOf(player.getCurrentParkourTime());
             case "current_time" -> player.getCurrentParkourStart() == null
                     ? "0"
+                    : String.valueOf(player.getCurrentParkourTime());
+            case "current_duration" -> player.getCurrentParkourStart() == null
+                    ? "0s"
                     : String.valueOf(player.getCurrentParkourDuration());
             case "current_checkpoint" -> String.valueOf(player.getCurrentParkourCheckpoint() + 1);
             default -> {
