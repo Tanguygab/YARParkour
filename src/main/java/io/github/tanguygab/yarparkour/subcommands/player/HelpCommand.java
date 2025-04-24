@@ -19,7 +19,7 @@ public class HelpCommand extends SubCommand {
     @Override
     public void onCommand(CommandSender sender, String command, String[] args) {
         List<String> subcommands = new ArrayList<>();
-        for (String subcommand : plugin.getCommand().getSubcommands()) {
+        for (String subcommand : plugin.getCommand().getSubcommands(sender)) {
             String usage = getMessage("commands." + subcommand + ".usage");
             String description = getMessage("commands." + subcommand + ".description");
             for (String cmdMsg : commandMsg) {

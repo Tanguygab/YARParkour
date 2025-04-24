@@ -25,6 +25,10 @@ public abstract class SubCommand {
         this(plugin, name, false);
     }
 
+    public String getName() {
+        return name;
+    }
+
     public boolean canUse(CommandSender sender) {
         return !permission || sender.hasPermission("yarparkour." + name);
     }

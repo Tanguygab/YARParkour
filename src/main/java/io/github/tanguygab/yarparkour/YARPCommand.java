@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class YARPCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         return args.length > 1
                 ? getSubcommand(sender, args).onTabComplete(sender, alias, Arrays.copyOfRange(args, 1, args.length))
-                : getSubcommands();
+                : getSubcommands(sender);
     }
 
     private SubCommand getSubcommand(CommandSender sender, String[] args) {
@@ -52,7 +51,11 @@ public class YARPCommand implements CommandExecutor, TabCompleter {
         return cmd != null && cmd.canUse(sender) ? cmd : subcommands.get("help");
     }
 
-    public List<String> getSubcommands() {
-        return new ArrayList<>(subcommands.keySet());
+    public List<String> getSubcommands(CommandSender sender) {
+        return subcommands.values()
+                .stream()
+                .filter(cmd -> cmd.canUse(sender))
+                .map(SubCommand::getName)
+                .toList();
     }
 }

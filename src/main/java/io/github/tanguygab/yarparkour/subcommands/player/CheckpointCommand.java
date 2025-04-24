@@ -37,6 +37,9 @@ public class CheckpointCommand extends SubCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, String command, String[] args) {
-        return List.of();
+        return switch (args.length) {
+            case 0, 1 -> getPlayersComplete(sender);
+            default -> List.of();
+        };
     }
 }
