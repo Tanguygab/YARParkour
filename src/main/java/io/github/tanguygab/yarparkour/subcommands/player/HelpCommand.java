@@ -32,6 +32,7 @@ public class HelpCommand extends SubCommand {
         sendMessage(sender, String.join("\n", msg)
                 .replace("{commands}", String.join("\n", subcommands))
                 .replace("{command}", command)
+                .replace("{version}", plugin.getDescription().getVersion())
         );
     }
 
