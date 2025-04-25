@@ -3,8 +3,12 @@ package io.github.tanguygab.yarparkour.managers;
 import io.github.tanguygab.yarparkour.YARParkour;
 import io.github.tanguygab.yarparkour.entities.YARPParkour;
 import io.github.tanguygab.yarparkour.entities.YARPPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -12,6 +16,7 @@ import java.util.*;
 public class YARPPlayerManager extends YARPManager {
 
     private final Map<UUID, YARPPlayer> players = new HashMap<>();
+    private Team team;
 
     public YARPPlayerManager(YARParkour plugin) {
         super(plugin, "players.yml");
@@ -19,6 +24,14 @@ public class YARPPlayerManager extends YARPManager {
 
     @Override
     public void load() {
+        ScoreboardManager scoreboard = Bukkit.getScoreboardManager();
+        if (scoreboard != null) {
+            team = scoreboard.getMainScoreboard().getTeam("YARParkour");
+            if (team == null) team = scoreboard.getMainScoreboard().registerNewTeam("YARParkour");
+
+            team.setCanSeeFriendlyInvisibles(true);
+            team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+        }
         plugin.getServer().getOnlinePlayers().forEach(this::loadPlayer);
     }
 
@@ -51,6 +64,7 @@ public class YARPPlayerManager extends YARPManager {
             LocalDateTime start = LocalDateTime.parse(config.getString("current.start", ""));
             pPlayer = new YARPPlayer(player, bestTimes, parkour, checkpoint, start);
             pPlayer.giveItems(plugin.getConfiguration());
+            addTeam(player);
         } else pPlayer = new YARPPlayer(player, bestTimes);
 
         players.put(player.getUniqueId(), pPlayer);
@@ -65,6 +79,7 @@ public class YARPPlayerManager extends YARPManager {
 
     public void unloadPlayer(UUID uuid, boolean save) {
         YARPPlayer player = players.get(uuid);
+        removeTeam(player.getPlayer());
         Map<String, Long> bestTimes = new HashMap<>();
         player.getBestTimes().forEach((parkour, time) -> bestTimes.put(parkour.getName(), time));
         data.set(uuid + ".best-times", bestTimes);
@@ -81,6 +96,16 @@ public class YARPPlayerManager extends YARPManager {
         if (!save) return;
         players.remove(uuid);
         save();
+    }
+
+    public void addTeam(Player player) {
+        if (team != null) team.addEntry(player.getName());
+        player.addPotionEffect(PotionEffectType.INVISIBILITY.createEffect(-1, 1));
+    }
+
+    public void removeTeam(Player player) {
+        if (team != null) team.removeEntry(player.getName());
+        player.removePotionEffect(PotionEffectType.INVISIBILITY);
     }
 
     public YARPPlayer getPlayer(UUID uuid) {
