@@ -6,9 +6,7 @@ import io.github.tanguygab.yarparkour.entities.YARPPlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class YARPPlayerManager extends YARPManager {
 
@@ -70,5 +68,17 @@ public class YARPPlayerManager extends YARPManager {
             if (name.equalsIgnoreCase(player.getPlayer().getName()))
                 return player;
         return null;
+    }
+
+    public List<YARPPlayer> getPlayers(YARPParkour parkour) {
+        return players.values()
+                .stream()
+                .filter(player -> player.getCurrentParkour() == parkour)
+                .sorted(Comparator
+                        .comparingInt(YARPPlayer::getCurrentParkourCheckpoint)
+                        .reversed()
+                        .thenComparingLong(YARPPlayer::getCurrentParkourTime)
+                )
+                .toList();
     }
 }

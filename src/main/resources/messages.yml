@@ -75,6 +75,10 @@ commands:
     description: "Reload this plugin's configuration"
     usage: "/{command} reload"
     reloaded: "&aPlugin reloaded successfully"
+  reset:
+    description: "Restart a parkour"
+    usage: "/{command} reset <parkour> [player]"
+    reset-for-player: "&aParkour restarted for {player}"
   start:
     description: "Start a parkour"
     usage: "/{command} start <parkour> [player]"
@@ -88,6 +92,15 @@ commands:
     description: "Go back to the last checkpoint"
     usage: "/{command} checkpoint [player]"
     teleported: "&aTeleported back to the last checkpoint."
+  top:
+    description: "See a parkour's live top"
+    usage: "/{command} top [player]"
+    message:
+      - "&8--------------------"
+      - "&7Live Top Players"
+      - "{players}"
+      - "&8--------------------"
+    player: "- {position}. {player} (Checkpoint: #{checkpoint}, Time: {duration})"
 
 parkour:
   no-parkour: "&cYou're not in any parkour!"

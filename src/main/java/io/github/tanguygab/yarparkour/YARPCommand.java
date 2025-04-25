@@ -20,19 +20,20 @@ public class YARPCommand implements CommandExecutor, TabCompleter {
 
     public YARPCommand(YARParkour plugin) {
         subcommands = new HashMap<>() {{
-                put("create", new CreateCommand(plugin));
-                put("delete", new DeleteCommand(plugin));
-                put("edit", new EditCommand(plugin));
-                put("info", new InfoCommand(plugin));
-                put("list", new ListCommand(plugin));
-                put("reload", new ReloadCommand(plugin));
+            put("create", new CreateCommand(plugin));
+            put("delete", new DeleteCommand(plugin));
+            put("edit", new EditCommand(plugin));
+            put("info", new InfoCommand(plugin));
+            put("list", new ListCommand(plugin));
+            put("reload", new ReloadCommand(plugin));
 
-                put("checkpoint", new CheckpointCommand(plugin));
-                put("help", new HelpCommand(plugin));
-                put("reset", new ResetCommand(plugin));
-                put("start", new StartCommand(plugin));
-                put("stop", new StopCommand(plugin));
-            }};
+            put("checkpoint", new CheckpointCommand(plugin));
+            put("help", new HelpCommand(plugin));
+            put("reset", new ResetCommand(plugin));
+            put("start", new StartCommand(plugin));
+            put("stop", new StopCommand(plugin));
+            put("top", new TopCommand(plugin));
+        }};
     }
 
     @Override

@@ -26,7 +26,7 @@ public class ResetCommand extends SubCommand {
 
         Location location = player.getCurrentParkour().getStart();
         player.getPlayer().teleport(location);
-        if (sender != player.getPlayer()) sendMessage(sender, getMessage("commands.checkpoint.teleported"));
+        if (sender != player.getPlayer()) sendMessage(sender, getMessage("commands.reset.reset-for-player"));
     }
 
     @Override

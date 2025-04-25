@@ -65,10 +65,10 @@ public class YARPPlayer {
 
     public String getCurrentParkourDuration() {
         long ms = getCurrentParkourTime();
-        long seconds = ms / 100;
+        long seconds = ms / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;
-        ms %= 100;
+        ms %= 1000;
         seconds %= 60;
         minutes %= 60;
 
