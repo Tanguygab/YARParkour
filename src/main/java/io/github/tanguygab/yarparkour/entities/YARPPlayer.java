@@ -48,7 +48,7 @@ public class YARPPlayer {
             YARPConfig config = ((YARParkour)YARParkour.getProvidingPlugin(YARParkour.class)).getConfiguration();
             giveItems(config);
             currentParkourStart = LocalDateTime.now();
-            if (config.teleportOnStart()) player.teleport(parkour.getStart());
+            if (config.teleportOnStart()) config.teleport(player, parkour.getStart());
         }
     }
 

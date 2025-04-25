@@ -25,7 +25,7 @@ public class ResetCommand extends SubCommand {
         }
 
         Location location = player.getCurrentParkour().getStart();
-        player.getPlayer().teleport(location);
+        plugin.getConfiguration().teleport(player.getPlayer(), location);
         if (sender != player.getPlayer()) sendMessage(sender, getMessage("commands.reset.reset-for-player"));
     }
 

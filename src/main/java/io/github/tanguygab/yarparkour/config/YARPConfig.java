@@ -2,6 +2,7 @@ package io.github.tanguygab.yarparkour.config;
 
 import io.github.tanguygab.yarparkour.YARParkour;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,6 +22,7 @@ public class YARPConfig {
     private final Map<YARPCheckpointType, YARPCheckpointConfig> checkpoints;
     private final double distance;
     private final boolean teleportOnStart;
+    private final boolean teleportWithDirection;
     private final boolean rememberOnLogout;
 
     private final Map<String, YARPItem> items = new HashMap<>();
@@ -31,6 +33,7 @@ public class YARPConfig {
 
         distance = config.getDouble("distance", 1.5);
         teleportOnStart = config.getBoolean("teleport-on-start", false);
+        teleportWithDirection = config.getBoolean("teleport-with-direction", true);
         rememberOnLogout = config.getBoolean("remember-on-logout", true);
 
         checkpoints = Map.of(
@@ -91,6 +94,14 @@ public class YARPConfig {
 
     public boolean teleportOnStart() {
         return teleportOnStart;
+    }
+
+    public void teleport(Player player, Location location) {
+        if (!teleportWithDirection) {
+            location.setYaw(player.getLocation().getYaw());
+            location.setPitch(player.getLocation().getPitch());
+        }
+        player.teleport(location);
     }
 
     public boolean rememberOnLogout() {

@@ -29,7 +29,7 @@ public class CheckpointCommand extends SubCommand {
                 ? player.getCurrentParkour().getStart()
                 : player.getCurrentParkour().getCheckpoints().get(checkpoint);
 
-        player.getPlayer().teleport(location);
+        plugin.getConfiguration().teleport(player.getPlayer(), location);
 
         sendMessage(player.getPlayer(), getMessage("commands.checkpoint.teleported"));
         if (sender != player.getPlayer()) sendMessage(sender, getMessage("commands.checkpoint.teleported"));

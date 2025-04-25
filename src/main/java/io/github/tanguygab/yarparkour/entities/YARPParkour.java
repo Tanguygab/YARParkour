@@ -77,7 +77,7 @@ public class YARPParkour {
 
         assert location.getWorld() != null;
         location.getWorld().getNearbyEntities(
-                location.add(0, 3, 0), 1, 1, 1,
+                location.add(0, 3, 0), 2, 2, 2,
                 entity -> entity.getPersistentDataContainer().has(PARKOUR_KEY)
         ).forEach(Entity::remove);
     }
@@ -108,7 +108,8 @@ public class YARPParkour {
     }
 
     public void setCheckpoint(int index, Location location) {
-        clearCheckpoint(location);
+        clearCheckpoint(checkpoints.get(index));
+        checkpoints.set(index, location);
         setCheckpoint(location, YARPCheckpointType.CHECKPOINT, String.valueOf(index + 1));
     }
 
