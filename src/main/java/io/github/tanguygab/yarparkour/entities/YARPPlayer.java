@@ -1,6 +1,7 @@
 package io.github.tanguygab.yarparkour.entities;
 
 import io.github.tanguygab.yarparkour.YARParkour;
+import io.github.tanguygab.yarparkour.config.YARPConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,9 +18,17 @@ public class YARPPlayer {
     private LocalDateTime currentParkourStart;
     private ItemStack[] inventory;
 
+
     public YARPPlayer(Player player, Map<YARPParkour, Long> bestTimes) {
         this.player = player;
         this.bestTimes = bestTimes;
+    }
+
+    public YARPPlayer(Player player, Map<YARPParkour, Long> bestTimes, YARPParkour parkour, int checkpoint, LocalDateTime start) {
+        this(player, bestTimes);
+        this.currentParkour = parkour;
+        this.currentParkourCheckpoint = checkpoint;
+        this.currentParkourStart = start;
     }
 
     public Player getPlayer() {
@@ -31,20 +40,26 @@ public class YARPPlayer {
     }
 
     public void setCurrentParkour(YARPParkour parkour) {
-        if (currentParkour != null && inventory != null) {
-            player.getInventory().clear();
-            player.getInventory().setContents(inventory);
-        }
+        if (currentParkour != null && inventory != null) restoreInventory();
         currentParkour = parkour;
         currentParkourCheckpoint = -1;
         currentParkourStart = null;
         if (parkour != null) {
-            inventory = player.getInventory().getContents().clone();
-            player.getInventory().clear();
-            ((YARParkour)YARParkour.getProvidingPlugin(YARParkour.class)).getConfiguration().giveItems(player);
+            YARPConfig config = ((YARParkour)YARParkour.getProvidingPlugin(YARParkour.class)).getConfiguration();
+            giveItems(config);
             currentParkourStart = LocalDateTime.now();
-            player.teleport(parkour.getStart());
+            if (config.teleportOnStart()) player.teleport(parkour.getStart());
         }
+    }
+
+    public void restoreInventory() {
+        player.getInventory().setContents(inventory);
+    }
+
+    public void giveItems(YARPConfig config) {
+        inventory = player.getInventory().getContents().clone();
+        player.getInventory().clear();
+        config.giveItems(player);
     }
 
     public int getCurrentParkourCheckpoint() {

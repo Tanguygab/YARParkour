@@ -6,6 +6,7 @@ import io.github.tanguygab.yarparkour.entities.YARPPlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class YARPPlayerManager extends YARPManager {
@@ -42,7 +43,17 @@ public class YARPPlayerManager extends YARPManager {
             });
         }
 
-        players.put(player.getUniqueId(), new YARPPlayer(player, bestTimes));
+        YARPPlayer pPlayer;
+
+        if (config.contains("current")) {
+            YARPParkour parkour = plugin.getParkourManager().getParkour(config.getString("current.parkour"));
+            int checkpoint = config.getInt("current.checkpoint");
+            LocalDateTime start = LocalDateTime.parse(config.getString("current.start", ""));
+            pPlayer = new YARPPlayer(player, bestTimes, parkour, checkpoint, start);
+            pPlayer.giveItems(plugin.getConfiguration());
+        } else pPlayer = new YARPPlayer(player, bestTimes);
+
+        players.put(player.getUniqueId(), pPlayer);
     }
 
     @Override
@@ -52,11 +63,24 @@ public class YARPPlayerManager extends YARPManager {
         save();
     }
 
-    public void unloadPlayer(UUID uuid, boolean remove) {
+    public void unloadPlayer(UUID uuid, boolean save) {
+        YARPPlayer player = players.get(uuid);
         Map<String, Long> bestTimes = new HashMap<>();
-        players.get(uuid).getBestTimes().forEach((parkour, time) -> bestTimes.put(parkour.getName(), time));
+        player.getBestTimes().forEach((parkour, time) -> bestTimes.put(parkour.getName(), time));
         data.set(uuid + ".best-times", bestTimes);
-        if (remove) players.remove(uuid);
+
+        if (player.getCurrentParkour() != null) {
+            player.restoreInventory();
+            if (plugin.getConfiguration().rememberOnLogout()) {
+                data.set(uuid + ".current.parkour", player.getCurrentParkour().getName());
+                data.set(uuid + ".current.checkpoint", player.getCurrentParkourCheckpoint());
+                data.set(uuid + ".current.start", player.getCurrentParkourStart().toString());
+            }
+        }
+
+        if (!save) return;
+        players.remove(uuid);
+        save();
     }
 
     public YARPPlayer getPlayer(UUID uuid) {

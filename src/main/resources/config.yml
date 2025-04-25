@@ -1,4 +1,6 @@
 distance: 1.5
+teleport-on-start: false
+remember-on-logout: true
 
 checkpoints:
   start:

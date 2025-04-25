@@ -20,6 +20,8 @@ public class YARPConfig {
 
     private final Map<YARPCheckpointType, YARPCheckpointConfig> checkpoints;
     private final double distance;
+    private final boolean teleportOnStart;
+    private final boolean rememberOnLogout;
 
     private final Map<String, YARPItem> items = new HashMap<>();
 
@@ -28,6 +30,8 @@ public class YARPConfig {
         ConfigurationSection config = plugin.getConfig();
 
         distance = config.getDouble("distance", 1.5);
+        teleportOnStart = config.getBoolean("teleport-on-start", false);
+        rememberOnLogout = config.getBoolean("remember-on-logout", true);
 
         checkpoints = Map.of(
                 YARPCheckpointType.START, getCheckpointConfig(config, "start"),
@@ -83,5 +87,13 @@ public class YARPConfig {
 
     public void giveItems(Player player) {
         items.values().forEach(item -> item.giveItem(player));
+    }
+
+    public boolean teleportOnStart() {
+        return teleportOnStart;
+    }
+
+    public boolean rememberOnLogout() {
+        return rememberOnLogout;
     }
 }
