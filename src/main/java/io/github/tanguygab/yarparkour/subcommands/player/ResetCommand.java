@@ -11,7 +11,7 @@ import java.util.List;
 public class ResetCommand extends SubCommand {
 
     public ResetCommand(YARParkour plugin) {
-        super(plugin, "checkpoint");
+        super(plugin, "reset");
     }
 
     @Override
