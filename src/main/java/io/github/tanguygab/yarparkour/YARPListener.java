@@ -3,6 +3,7 @@ package io.github.tanguygab.yarparkour;
 import io.github.tanguygab.yarparkour.config.YARPItem;
 import io.github.tanguygab.yarparkour.entities.YARPParkour;
 import io.github.tanguygab.yarparkour.entities.YARPPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -11,6 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -32,6 +35,11 @@ public class YARPListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         plugin.getPlayerManager().loadPlayer(e.getPlayer());
+        YARPPlayer player = plugin.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+        if (player.getCurrentParkour() == null) {
+            Player p = e.getPlayer();
+            p.teleport(new Location(Bukkit.getWorld("world"), 16, -55, 10));
+        }
     }
 
     @EventHandler
@@ -190,4 +198,13 @@ public class YARPListener implements Listener {
         });
     }
 
+    @EventHandler
+    public void onDamage(EntityDamageEvent e) {
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onFoodLevelChange(FoodLevelChangeEvent e) {
+        e.setCancelled(true);
+    }
 }
