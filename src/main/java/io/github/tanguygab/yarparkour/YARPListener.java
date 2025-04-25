@@ -105,11 +105,6 @@ public class YARPListener implements Listener {
         YARPParkour parkour = plugin.getParkourManager().getParkourFromCheckpoint(location);
         if (parkour == null) return;
 
-        if (moved.contains(player)) return;
-
-        moved.add(player);
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> moved.remove(player), 40);
-
         YARPPlayer pPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId());
 
         if (pPlayer.getCurrentParkour() != parkour) {
@@ -119,6 +114,10 @@ public class YARPListener implements Listener {
             }
 
             if (plugin.getParkourManager().locationMatch(location, parkour.getStart())) {
+                if (moved.contains(player)) return;
+                moved.add(player);
+                plugin.getServer().getScheduler().runTaskLater(plugin, () -> moved.remove(player), 40);
+
                 if (!parkour.isEnabled()) {
                     plugin.sendMessage(player, plugin.getMessage("parkour.disabled"));
                     return;
@@ -137,6 +136,9 @@ public class YARPListener implements Listener {
         }
 
         if (plugin.getParkourManager().locationMatch(location, parkour.getStart())) {
+            if (moved.contains(player)) return;
+            moved.add(player);
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> moved.remove(player), 40);
             plugin.sendMessage(player, plugin.getMessage("parkour.restarted"));
             pPlayer.setCurrentParkour(parkour);
             return;
